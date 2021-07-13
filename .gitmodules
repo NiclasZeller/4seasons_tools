@@ -1,0 +1,3 @@
+[submodule "submodules/libartipy"]
+	path = submodules/libartipy
+	url = git@github.com:Artisense-ai/libartipy.git
