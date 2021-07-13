@@ -355,19 +355,6 @@ def evalMapAccuracy(input_file, nmea_file, gps_config, var_threshold, only_accur
             plt.show(block=False)
             plt.savefig(output_dir + 'map_accuracy_trajectory_coverage.png')
 
-        plt.figure(dpi=120, figsize=(15, 10))
-        plt.plot(gnss_points_enu[:, 1],
-                 gnss_points_enu[:, 2], 'o', color='g', label='GNSS', markersize=8)
-        plt.plot(good_eval_points_enu[:, 1],
-                 good_eval_points_enu[:, 2], '.', color='r', label='Keyframe',  markersize=5)
-        plt.title('trajectory coverage good Keyframe vs. GNSS')
-        plt.xlabel('x [m]')
-        plt.ylabel('y [m]')
-        plt.legend()
-        if save_figs:
-            plt.show(block=False)
-            plt.savefig(
-                output_dir + 'map_accuracy_good_keyframe_vs_gnss_coverage.png')
         if plot_results:
             plt.show()
 
