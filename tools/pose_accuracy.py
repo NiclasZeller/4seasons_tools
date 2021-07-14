@@ -288,16 +288,12 @@ def evalMapAccuracy(input_file, nmea_file, gps_config, var_threshold, only_accur
     f.write('#Keyframe with accuracy better than {:1.4f} m: {:d} of {:d}\n\n'.format(np.sqrt(var_threshold), n_accurate,
                                                                                      n_kf))
     f.write('# timestamp_ns std_gnss_north_m std_gnss_east_m horizontal_diff_m\n')
-    good_eval_points_enu = []
 
     for i in range(len(error_vec)):
         if not only_accurate_kf or (error_vec[i] <= std_threshold):
             f.write(
                 '{:d} {:1.4f} {:1.4f} {:1.4f}\n'.format(gnss_points_enu[i, 0].astype(np.uint64), gnss_points_enu[i, 4],
                                                         gnss_points_enu[i, 5], error_vec[i]))
-            good_eval_points_enu.append(eval_points_enu[i])
-
-    good_eval_points_enu = np.array(good_eval_points_enu).squeeze()
 
     f.close()
 
