@@ -119,22 +119,7 @@ def framewiseGnssPoses(dataset_dir, frame, plot):
             # do interpolation only based on previous pose
             pose_rel = rt_poses[ts_pre].inverse() * rt_poses[ts]
             pose_rel.translation *= scale_pre
-            pose_pr = pose_pre * pose_rel
-
-            # interpolation between previous and next pose seems to result in instabilities in some case
-            # might be worth to check why this is the case
-            if ts < ts_pre or ts_post < 0:
-                pose_out = pose_pr
-            else:
-                # do interpolation based on next pose
-                pose_post = kf_poses[ts_post]
-                pose_rel = rt_poses[ts_post].inverse() * rt_poses[ts]
-                pose_rel.translation *= scale_pre
-                pose_pt = pose_post * pose_rel
-
-                delta_t = float(ts - ts_pre) / float(ts_post - ts_pre)
-                mean_tangent = pose_pt.inverse().log() * delta_t + pose_pr.inverse().log() * (1 - delta_t)
-                pose_out = Pose.exp(mean_tangent).inverse()
+            pose_out = pose_pre * pose_rel
 
         rt_poses_out.append((ts, pose_out.translation[0], pose_out.translation[1], pose_out.translation[2],
                              pose_out.rotation_quaternion.x, pose_out.rotation_quaternion.y,
