@@ -2,7 +2,6 @@
 # each sequence requires a folder odometry_resutls containing the visual odometry results
 
 FourSeasonsTools=~/workspace/4seasons_tools
-GpsConfigFile=$FourSeasonsTools/configs/4seasons/gps_config.cfg
 GpsVarThreshold=0.01 # this theshold is not really relevant, since for evaluation only poses with accuracy smaller 5cm are used
 
 for d in *; do
@@ -12,7 +11,7 @@ for d in *; do
         if [ ! -f "$d/keyframe_accuracy.txt" ]; then
             python3 $FourSeasonsTools/tools/pose_accuracy.py \
                 $d $d/septentrio.nmea \
-                --gps_config $GpsConfigFile \
+                --gps_config $d/gps_config.cfg \
                 --output $d \
                 --gps_var_threshold $GpsVarThreshold \
                 --only_accurate_kf \
