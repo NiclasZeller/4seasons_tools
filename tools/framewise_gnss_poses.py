@@ -79,11 +79,12 @@ def readPoses(filename, timestamps_ns):
     return timestamps, poses
 
 
-def framewiseGnssPoses(dataset_dir, frame, plot):
+def framewiseGnssPoses(dataset_dir, frame, ignore_gnss, plot):
     constants = Constants()
     dataset = Dataset(dataset_dir, constants=constants)
     dataset.parse_keyframes()
-    dataset.set_keyframe_poses_to_gps_poses()
+    if not ignore_gnss:
+        dataset.set_keyframe_poses_to_gps_poses()
 
     if frame == 'enu':
         kf_poses = dataset.get_keyframe_poses_in_coordinate_system(
@@ -111,7 +112,10 @@ def framewiseGnssPoses(dataset_dir, frame, plot):
                 ts_post = -1
 
         pose_pre = kf_poses[ts_pre]
-        scale_pre = dataset.get_gps_pose_with_timestamp(ts_pre).get_translation_scale()
+        if ignore_gnss:
+            scale_pre = 1.0
+        else:
+            scale_pre = dataset.get_gps_pose_with_timestamp(ts_pre).get_translation_scale()
         if ts == ts_pre:
             # no interpolation required
             pose_out = pose_pre
@@ -127,7 +131,11 @@ def framewiseGnssPoses(dataset_dir, frame, plot):
 
         print('interpolate pose {}'.format(ts))
 
-    with open(os.path.join(dataset_dir, 'GNSSresult_' + frame + '.txt'), 'w') as file:
+    if ignore_gnss:
+        data_str = 'VIO'
+    else:
+        data_str = 'GNSS'
+    with open(os.path.join(dataset_dir, data_str + 'result_' + frame + '.txt'), 'w') as file:
         for rt_pose in rt_poses_out:
             file.write('{0[0]:d} {0[1]:1.10f} {0[2]:1.10f} {0[3]:1.10f} {0[4]:1.10f} {0[5]:1.10f} {0[6]:1.10f} {0['
                        '7]:1.10f}\n'.format(rt_pose))
@@ -147,10 +155,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Calculated frame-wise ')
     parser.add_argument(
         'dataset_dir', type=str, help='Path to 4Seasons dataset sequence')
-    parser.add_argument('--plot', action='store_true',
-                        help='Plot trajectory')
     parser.add_argument('--frame', type=str, help='Output coordinate frame (ecef or enu)',
                         default='enu', choices=['ecef', 'enu'])
+    parser.add_argument('--ignore_gnss', action='store_true',
+                        help='Ignore GNSS based optimization and interpolate only VIO poses')
+    parser.add_argument('--plot', action='store_true',
+                        help='Plot trajectory')
     args = parser.parse_args()
 
-    framewiseGnssPoses(args.dataset_dir, args.frame, args.plot)
+    framewiseGnssPoses(args.dataset_dir, args.frame, args.ignore_gnss, args.plot)
