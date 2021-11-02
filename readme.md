@@ -27,4 +27,6 @@ As set of useful tools is provided in the `tools` directory
 ### Place Recognition
 
 
+## TODOs
 
+ * we still need to add the transformation between rectified and non-rectified camera frame, since GT is defined with respect to the rectified left camera.
