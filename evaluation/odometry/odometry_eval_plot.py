@@ -5,6 +5,19 @@ from scipy import stats
 
 import os
 
+th_scale = np.array([1.005, 1.01, 1.02])
+th_rot = np.array([0.005, 0.01, 0.02])
+th_trans = np.array([0.5, 1.0, 2.0])
+
+
+def calcPercentThreshold(data_vec):
+    percent = np.zeros(len(th_trans))
+    for i in range(len(th_trans)):
+        percent[i] = sum(1 for j in range(len(data_vec[:, 0])) if
+                         ((data_vec[j, 0] <= th_trans[i]) and (data_vec[j, 1] <= th_rot[i]) and (data_vec[j, 2] <= th_scale[i])))
+
+    return percent / len(data_vec) * 100.0
+
 
 def cumPlot(ax, data_vec, low_lim, up_lim, label, n_bins=1000):
     cum_data = stats.cumfreq(data_vec, numbins=n_bins + 1,
@@ -43,6 +56,13 @@ def plotOdometryError(dir_error, plot_figures):
         return val[0]
 
     errors_list.sort(key=sortName)
+
+    file = open("odometry_results.txt", "w+")
+    for i in range(len(errors_list)):
+        label = errors_list[i][0]
+        percent = calcPercentThreshold((errors_list[i][1][:, 1:]).squeeze())
+        file.write("{} {} {} {}\n".format(label.ljust(30), percent[0], percent[1], percent[2]))
+    file.close()
 
     f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=False, figsize=(15, 3.5))
 

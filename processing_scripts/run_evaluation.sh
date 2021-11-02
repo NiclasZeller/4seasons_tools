@@ -44,6 +44,7 @@ for d in *; do
 	        python3 $FourSeasonsTools/evaluation/odometry/odometry_eval_plot.py $d/odometry_resutls/pose_error
             fi
             mv odometry_results.pdf $d/odometry_resutls/results_plot/odometry_results.pdf
+            mv odometry_results.txt $d/odometry_resutls/results_plot/odometry_results.txt
         fi
     fi
 done
