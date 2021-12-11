@@ -17,11 +17,12 @@ for d in *; do
                 --cam-calib $BASALT_CALIB_FILE \
                 --dataset-type arti \
                 --config-path $BASALT_CONFIG_FILE \
-                --save-trajectory tum \
+                --save-trajectory arti \
                 --show-gui 0 \
-                --use-imu 0
+                --use-imu 0 \
+                --use-double 1
 	
-            mv trajectory_left_cam.txt $d/odometry_resutls/basalt_stereo.txt
+            mv trajectory_left_cam_rect.txt $d/odometry_resutls/basalt_stereo.txt
         fi
     fi
 done
