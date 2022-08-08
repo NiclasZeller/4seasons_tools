@@ -3,6 +3,7 @@
 #--------------------------------------------------------------------------------------------
 # Camera Parameters. Adjust them!
 #--------------------------------------------------------------------------------------------
+Camera.type: "PinHole"
 
 # Camera calibration and distortion parameters (OpenCV) 
 Camera.fx: 501.4757919305817
@@ -28,7 +29,29 @@ Camera.bf: 150.691550759
 Camera.RGB: 1
 
 # Close/Far threshold. Baseline times.
-ThDepth: 40
+ThDepth: 40.0
+
+# Transformation from body-frame (imu) to rectified left camera
+Tbc: !!opencv-matrix
+   rows: 4
+   cols: 4
+   dt: f
+   data: [-0.9998852242642406, -0.013522961078544133, 0.006831385051241187, 0.17541216744862287,
+          -0.006890161859766396, 0.004304637029338462, -0.9999669973402087, 0.0036894333751345677, 
+           0.01349310815180704, -0.9998992947410829, -0.004397318352110671, -0.05810612695941222,
+           0.0, 0.0, 0.0, 1.0]
+
+#    Sophus::Matrix3d rectification_rotation;
+#    rectification_rotation << 0.999665, 0.00862511, -0.0244152,
+#        -0.00863697, 0.999963, -0.000380219,
+#        0.024411, 0.000590964, 0.999702;
+
+# IMU noise (probably not optimal paramters)
+IMU.NoiseGyro: 0.0014 # rad/s^0.5 
+IMU.NoiseAcc: 0.006 # m/s^1.5
+IMU.GyroWalk: 0.0001 # rad/s^1.5
+IMU.AccWalk: 0.0001 # m/s^2.5
+IMU.Frequency: 2000
 
 #--------------------------------------------------------------------------------------------
 # ORB Parameters
